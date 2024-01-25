@@ -18,6 +18,7 @@ public class Word {
 	private String translatedTo;
 	private String contextSentence;
 	private String TranslatedContextSentence;
+	private String Translation;
 	
 	public long getId() {
 		return id;
@@ -54,5 +55,11 @@ public class Word {
 	}
 	public void setTranslatedContextSentence(String translatedContextSentence) {
 		TranslatedContextSentence = translatedContextSentence;
+	}
+	public String getTranslation() {
+		return Translation;
+	}
+	public void setTranslation(String translation) {
+		Translation = translation;
 	}
 }
