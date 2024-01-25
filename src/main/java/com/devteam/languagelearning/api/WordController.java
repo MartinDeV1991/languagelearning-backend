@@ -24,7 +24,7 @@ public class WordController {
 	public List<Word> findAllWords() {
 		return wordService.getAllWords();
 	}
-	
+//	
 	@GetMapping("{id}")
 	public ResponseEntity<Word> findById(@PathVariable long id) {
 		Optional<Word> optionalWord = wordService.findById(id);
