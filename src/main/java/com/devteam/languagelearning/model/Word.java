@@ -17,8 +17,8 @@ public class Word {
 	private String sourceLanguage;
 	private String translatedTo;
 	private String contextSentence;
-	private String TranslatedContextSentence;
-	private String Translation;
+	private String translatedContextSentence;
+	private String translation;
 	
 	public long getId() {
 		return id;
@@ -51,15 +51,15 @@ public class Word {
 		this.contextSentence = contextSentence;
 	}
 	public String getTranslatedContextSentence() {
-		return TranslatedContextSentence;
+		return translatedContextSentence;
 	}
 	public void setTranslatedContextSentence(String translatedContextSentence) {
-		TranslatedContextSentence = translatedContextSentence;
+		this.translatedContextSentence = translatedContextSentence;
 	}
 	public String getTranslation() {
-		return Translation;
+		return translation;
 	}
 	public void setTranslation(String translation) {
-		Translation = translation;
+		this.translation = translation;
 	}
 }
