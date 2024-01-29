@@ -1,10 +1,6 @@
 package com.devteam.languagelearning.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "word")
@@ -19,6 +15,9 @@ public class Word {
 	private String contextSentence;
 	private String translatedContextSentence;
 	private String translation;
+	@ManyToOne
+	@JoinColumn(name="root_word_id")
+	private RootWord rootWord;
 	
 	public long getId() {
 		return id;
@@ -61,5 +60,13 @@ public class Word {
 	}
 	public void setTranslation(String translation) {
 		this.translation = translation;
+	}
+
+	public RootWord getRootWord() {
+		return rootWord;
+	}
+
+	public void setRootWord(RootWord rootWord) {
+		this.rootWord = rootWord;
 	}
 }
