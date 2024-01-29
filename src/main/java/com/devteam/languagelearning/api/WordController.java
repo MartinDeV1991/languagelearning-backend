@@ -32,4 +32,8 @@ public class WordController {
 	                       .orElse(ResponseEntity.notFound().build());
 	}
 	
+	@DeleteMapping("/delete/{id}")
+	public Word deleteWord(@PathVariable long id) {
+		return wordService.deleteWord(id);
+	}
 }
