@@ -13,6 +13,7 @@ public class OpenAiConfig {
 //    private static final String openAiKey = "test";
     
     public static String getOpenAiKey() {
+    	System.out.println("key1234: " + openAiKey);
         return openAiKey;
     }
 }
