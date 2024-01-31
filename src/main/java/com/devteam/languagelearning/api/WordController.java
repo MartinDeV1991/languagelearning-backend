@@ -42,7 +42,7 @@ public class WordController {
 		String DB_HOST = System.getenv("DB_HOST");
 		String DEEPL_API_KEY = System.getenv("DEEPL_API_KEY");
 		String OPENAI_API_KEY = System.getenv("OPENAI_API_KEY");
-		return Arrays.asList(DB, DB_USERNAME, DB_PASSWORD, DB_HOST, DEEPL_API_KEY, OPENAI_API_KEY);
+		return Arrays.asList(DB, DB_USERNAME, DB_PASSWORD, DB_HOST);
 	}
 	
 	@GetMapping("{id}")
