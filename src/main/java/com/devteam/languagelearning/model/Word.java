@@ -15,9 +15,14 @@ public class Word {
 	private String contextSentence;
 	private String translatedContextSentence;
 	private String translation;
+	
 	@ManyToOne
 	@JoinColumn(name="root_word_id")
 	private RootWord rootWord;
+	
+	@ManyToOne
+	@JoinColumn(name = "user_id")
+	private User user;
 	
 	public long getId() {
 		return id;
@@ -65,8 +70,15 @@ public class Word {
 	public RootWord getRootWord() {
 		return rootWord;
 	}
-
 	public void setRootWord(RootWord rootWord) {
 		this.rootWord = rootWord;
 	}
+	
+	public User getUser() {
+		return user;
+	}
+	public void setUser(User user) {
+		this.user = user;
+	}
+	
 }
