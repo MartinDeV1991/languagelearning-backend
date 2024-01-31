@@ -11,8 +11,8 @@ public class DeeplConfig {
 //    @Value("${deepl.api.key}")
 //    private String deeplApiKey;
 
-//    private final String deeplApiKey = System.getenv("DEEPL_API_KEY");
-    private final String deeplApiKey = "test";
+    private final String deeplApiKey = System.getenv("DEEPL_API_KEY");
+//    private final String deeplApiKey = "test";
 
     @Bean
     public Translator translator() {
