@@ -19,13 +19,16 @@ public class WordService {
 	@Autowired
 	private WordRepository wordRepository;
 
+	@Autowired
+	private RootWordService rootWordService;
+
 	private final Translator translator;
 
 	@Autowired
-	public WordService(Translator translator) {
+	public WordService(Translator translator, RootWordService rootWordService) {
 		this.translator = translator;
+		this.rootWordService = rootWordService;
 	}
-
 	public List<Word> getAllWords() {
 		return wordRepository.findAll();
 	}
@@ -46,6 +49,8 @@ public class WordService {
 				if (word.getSourceLanguage() == null) {
 					word.setSourceLanguage(translatedSentence.getDetectedSourceLanguage());
 				}
+				// set root word (either existing or create new one)
+				rootWordService.setRootWord(word);
 
 				// save and return new word object
 				return this.wordRepository.save(word);

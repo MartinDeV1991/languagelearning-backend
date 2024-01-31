@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import com.devteam.languagelearning.model.RootWord;
 import com.devteam.languagelearning.service.OpenAiApiService;
+import com.devteam.languagelearning.service.RootWordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,9 @@ public class WordController {
 
 	@Autowired
 	private OpenAiApiService openAiApiService;
+
+	@Autowired
+	private RootWordService rootWordService;
 
 	@GetMapping
 	public List<Word> findAllWords() {
@@ -53,7 +57,7 @@ public class WordController {
 
 	@GetMapping("/root/{id}")
 	public ResponseEntity<RootWord> getRootWord(@PathVariable long id) {
-		RootWord result = openAiApiService.getRootWord(wordService.findById(id).get());
+		RootWord result = rootWordService.getRootWord(wordService.findById(id).get());
 		return ResponseEntity.ok(result);
 	}
 

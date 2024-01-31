@@ -16,8 +16,7 @@ public class RootWord {
 
     private String definitionInEnglish;
 
-    public RootWord(String partOfSpeech, String word) {
-        this.partOfSpeech = partOfSpeech;
+    public RootWord(String word) {
         this.word = word;
     }
 
