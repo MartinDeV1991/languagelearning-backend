@@ -16,6 +16,7 @@ public class DeeplConfig {
 
     @Bean
     public Translator translator() {
+    	System.out.println(deeplApiKey);
         return new Translator(deeplApiKey);
     }
 }
