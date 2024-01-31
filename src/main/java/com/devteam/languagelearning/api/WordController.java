@@ -1,5 +1,6 @@
 package com.devteam.languagelearning.api;
 
+import java.util.Arrays;
 import java.util.List;
 
 import java.util.Optional;
@@ -32,7 +33,18 @@ public class WordController {
 	public List<Word> findAllWords() {
 		return wordService.getAllWords();
 	}
-//	
+
+	@GetMapping("test")
+	public List<String> test() {
+		String DB = System.getenv("DB");
+		String DB_USERNAME = System.getenv("DB_USERNAME");
+		String DB_PASSWORD = System.getenv("DB_PASSWORD");
+		String DB_HOST = System.getenv("DB_HOST");
+		String DEEPL_API_KEY = System.getenv("DEEPL_API_KEY");
+		String OPENAI_API_KEY = System.getenv("OPENAI_API_KEY");
+		return Arrays.asList(DB, DB_USERNAME, DB_PASSWORD, DB_HOST, DEEPL_API_KEY, OPENAI_API_KEY);
+	}
+	
 	@GetMapping("{id}")
 	public ResponseEntity<Word> findById(@PathVariable long id) {
 		Optional<Word> optionalWord = wordService.findById(id);
