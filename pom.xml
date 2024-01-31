@@ -63,8 +63,12 @@
 			<artifactId>deepl-java</artifactId>
 			<version>1.4.0</version>
 		</dependency>
-	</dependencies>
-
+		<dependency>
+			<groupId>com.theokanning.openai-gpt3-java</groupId>
+			<artifactId>service</artifactId>
+			<version>0.18.2</version>
+		</dependency>
+</dependencies>
 	<build>
 		<plugins>
 			<plugin>
