@@ -8,11 +8,11 @@ import org.springframework.beans.factory.annotation.Value;
 @Configuration
 public class DeeplConfig {
 
-    @Value("${DEEPL_API_KEY}")
-    private String deeplApiKey;
+    // @Value("${DEEPL_API_KEY}")
+    // private String deeplApiKey;
 
-//    private String deeplApiKey = System.getenv("DEEPL_API_KEY");;
-//    private final String deeplApiKey = "test";
+   // private String deeplApiKey = System.getenv("DEEPL_API_KEY");;
+   private final String deeplApiKey = "test";
 
     @Bean
     public Translator translator() {
