@@ -1,5 +1,7 @@
 package com.devteam.languagelearning.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -20,6 +22,7 @@ public class Word {
 	@JoinColumn(name="root_word_id")
 	private RootWord rootWord;
 	
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	private User user;

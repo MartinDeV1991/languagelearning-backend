@@ -33,7 +33,12 @@ public class WordController {
 	public List<Word> findAllWords() {
 		return wordService.getAllWords();
 	}
-
+	
+	@GetMapping("user/{user_id}")
+	public List<Word> findWordsByUser(@PathVariable long user_id) {
+		return wordService.getWordsByUser(user_id);
+	}
+	
 	@GetMapping("test")
 	public List<String> test() {
 		String DB = System.getenv("DB");

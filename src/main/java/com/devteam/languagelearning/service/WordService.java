@@ -7,9 +7,11 @@ import java.util.Optional;
 import com.deepl.api.DeepLException;
 import com.deepl.api.TextResult;
 import com.deepl.api.Translator;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.devteam.languagelearning.model.User;
 import com.devteam.languagelearning.model.Word;
 import com.devteam.languagelearning.persistence.WordRepository;
 
@@ -22,6 +24,9 @@ public class WordService {
 	@Autowired
 	private RootWordService rootWordService;
 
+	@Autowired
+	private UserService userService;
+	
 	private final Translator translator;
 
 	@Autowired
@@ -37,6 +42,17 @@ public class WordService {
 		return this.wordRepository.findById(id);
 	}
 
+	public List<Word> getWordsByUser(long user_id) {
+		Optional<User> optionalUser = userService.findById(user_id);
+		if (optionalUser.isPresent()) {
+			User user = optionalUser.get();
+		
+		return this.wordRepository.findByUser(user);
+		} else {
+			return null;
+		}
+	}
+	
 	public Word addWord(Word word) {
 			try {
 				// translate both word and sentence with deepl, save to the word object
