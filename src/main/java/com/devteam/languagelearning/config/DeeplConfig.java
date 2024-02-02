@@ -11,11 +11,12 @@ public class DeeplConfig {
     // @Value("${DEEPL_API_KEY}")
     // private String deeplApiKey;
 
-   private String deeplApiKey = System.getenv("DEEPL_API_KEY");;
+   private String deeplApiKey;
    // private String deeplApiKey = "test";
 
     @Bean
     public Translator translator() {
+        deeplApiKey = System.getenv("DEEPL_API_KEY");
     	System.out.println("key1: " + deeplApiKey);
     	if (deeplApiKey == null || deeplApiKey.isEmpty()) {
     		deeplApiKey = "key";
