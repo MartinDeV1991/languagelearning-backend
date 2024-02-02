@@ -4,7 +4,6 @@ import com.devteam.languagelearning.model.RootWord;
 import com.devteam.languagelearning.model.Word;
 import com.devteam.languagelearning.persistence.RootWordRepository;
 import com.devteam.languagelearning.persistence.WordRepository;
-import jakarta.persistence.criteria.Root;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,16 +26,20 @@ public class RootWordService {
         return rootWordRepository.save(newRootWord);
     }
 
-    public void setRootWord(Word word) {
-        RootWord rootWord = getRootWord(word);
-        Optional<RootWord> optional = rootWordRepository.findByWordAndPartOfSpeechAndLanguageIgnoreCase(rootWord.getWord(), rootWord.getPartOfSpeech(), word.getSourceLanguage());
-        if (optional.isEmpty()) {
-            openAiApiService.getRootWordDefinition(rootWord);
-            rootWordRepository.save(rootWord);
-        } else {
-            rootWord = optional.get();
+    public RootWord setRootWord(Word word) {
+        if (word.getRootWord() == null) {
+            RootWord rootWord = getRootWord(word);
+            Optional<RootWord> optional = rootWordRepository.findByWordAndPartOfSpeechAndLanguageIgnoreCase(rootWord.getWord(), rootWord.getPartOfSpeech(), word.getSourceLanguage());
+            if (optional.isEmpty()) {
+                openAiApiService.getRootWordDefinition(rootWord);
+                rootWordRepository.save(rootWord);
+            } else {
+                rootWord = optional.get();
+            }
+            word.setRootWord(rootWord);
+            return rootWord;
         }
-        word.setRootWord(rootWord);
+        else return word.getRootWord();
     }
 
     public RootWord getRootWord(Word word) {

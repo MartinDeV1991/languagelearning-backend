@@ -74,7 +74,7 @@ public class WordController {
 
 	@GetMapping("/root/{id}")
 	public ResponseEntity<RootWord> getRootWord(@PathVariable long id) {
-		RootWord result = rootWordService.getRootWord(wordService.findById(id).get());
+		RootWord result = rootWordService.setRootWord(wordService.findById(id).get());
 		return ResponseEntity.ok(result);
 	}
 
