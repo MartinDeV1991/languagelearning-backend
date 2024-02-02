@@ -9,15 +9,14 @@ public class OpenAiConfig {
     // @Value("${OPENAI_API_KEY}")
     // private static String openAiKey;
 
-   private String openAiKey = System.getenv("OPENAI_API_KEY");
+   private static String openAiKey = System.getenv("OPENAI_API_KEY");
 //    private static final String openAiKey = "test";
     
-    public String getOpenAiKey() {
-    	System.out.println("key2: " + openAiKey);
+    public static String getOpenAiKey() {
+    	System.out.println("key1234: " + openAiKey);
         if (openAiKey == null || openAiKey.isEmpty()) {
     		openAiKey = "key";
     	}
-        System.out.println("key2: " + openAiKey);
         return openAiKey;
     }
 }
