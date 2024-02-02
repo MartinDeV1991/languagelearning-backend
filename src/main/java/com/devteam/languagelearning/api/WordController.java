@@ -57,10 +57,10 @@ public class WordController {
 	                       .orElse(ResponseEntity.notFound().build());
 	}
 
-	@PostMapping("/new")
-	public ResponseEntity<?> addWord(@RequestBody Word word) {
+	@PostMapping("/new/for_user/{user_id}")
+	public ResponseEntity<?> addWord(@RequestBody Word word, @PathVariable long user_id) {
 		try {
-			return ResponseEntity.ok(wordService.addWord(word));
+			return ResponseEntity.ok(wordService.addWord(word, user_id));
 		}
 		catch (RuntimeException e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Deepl failed. Check that the request body contains 'word', 'contextSentence', and 'translatedTo'. You may also include 'sourceLanguage'.");
