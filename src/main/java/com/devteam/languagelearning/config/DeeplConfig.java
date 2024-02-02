@@ -16,10 +16,11 @@ public class DeeplConfig {
 
     @Bean
     public Translator translator() {
-    	System.out.println("key: " + deeplApiKey);
+    	System.out.println("key1: " + deeplApiKey);
     	if (deeplApiKey == null || deeplApiKey.isEmpty()) {
     		deeplApiKey = "key";
     	}
+    	System.out.println("key1: " + deeplApiKey);
         return new Translator(deeplApiKey);
     }
 }
