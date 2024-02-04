@@ -18,6 +18,7 @@ public class DeeplConfig {
     public Translator translator() {
         deeplApiKey = System.getenv("DEEPL_API_KEY");
     	System.out.println("key1: " + deeplApiKey);
+        System.out.println("key1: " + System.getenv("DB"));
         // System.out.println("key2: " + deeplApiKey2);
     	if (deeplApiKey == null || deeplApiKey.isEmpty()) {
     		deeplApiKey = "key";
