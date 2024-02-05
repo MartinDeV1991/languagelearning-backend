@@ -26,7 +26,7 @@ public class RootWordService {
         return rootWordRepository.save(newRootWord);
     }
 
-    public RootWord setRootWord(Word word) {
+    public RootWord determineAndSetRootWord(Word word) {
         if (word.getRootWord() == null) {
             RootWord rootWord = getRootWord(word);
             Optional<RootWord> optional = rootWordRepository.findByWordAndPartOfSpeechAndLanguageIgnoreCase(rootWord.getWord(), rootWord.getPartOfSpeech(), word.getSourceLanguage());

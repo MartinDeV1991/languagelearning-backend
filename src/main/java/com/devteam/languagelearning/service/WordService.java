@@ -53,9 +53,7 @@ public class WordService {
 		}
 	}
 	
-	public Word addWord(Word word, long user_id) {
-			try {			
-				
+	public Word addWord(Word word, long user_id) throws DeepLException, InterruptedException {
 				// translate both word and sentence with deepl, save to the word object
                 TextResult translatedWord = translator.translateText(word.getWord(), word.getSourceLanguage(), word.getTranslatedTo());
 				TextResult translatedSentence = translator.translateText(word.getContextSentence(), word.getSourceLanguage(), word.getTranslatedTo());
@@ -67,7 +65,7 @@ public class WordService {
 					word.setSourceLanguage(translatedSentence.getDetectedSourceLanguage());
 				}
 				// set root word (either existing or create new one)
-				rootWordService.setRootWord(word);
+				rootWordService.determineAndSetRootWord(word);
 				
 				Optional<User> optionalUser = userService.findById(user_id);
 				if (optionalUser.isPresent()) {
@@ -77,11 +75,6 @@ public class WordService {
 				
 				// save and return new word object
 				return this.wordRepository.save(word);
-
-			} catch (DeepLException | InterruptedException e) {
-				System.out.println("Exception: " + e);
-				throw new RuntimeException(e);
-			}
 	}
 
 	public Word editWord(long id, Word editedWord) {

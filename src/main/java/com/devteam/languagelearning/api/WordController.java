@@ -5,6 +5,7 @@ import java.util.List;
 
 import java.util.Optional;
 
+import com.deepl.api.DeepLException;
 import com.devteam.languagelearning.model.RootWord;
 import com.devteam.languagelearning.service.OpenAiApiService;
 import com.devteam.languagelearning.service.RootWordService;
@@ -16,18 +17,19 @@ import org.springframework.web.bind.annotation.*;
 import com.devteam.languagelearning.model.Word;
 import com.devteam.languagelearning.service.WordService;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("api/word")
 public class WordController {
 
-	@Autowired
-	private WordService wordService;
-
-	@Autowired
-	private OpenAiApiService openAiApiService;
-
-	@Autowired
-	private RootWordService rootWordService;
+	// Constructor injection instead of field injection (https://medium.com/@detoxicdev/field-injection-v-s-constructor-injection-dd9db2d85b7b)
+	private final WordService wordService;
+	private final RootWordService rootWordService;
+	public WordController(WordService wordService, RootWordService rootWordService) {
+		this.wordService = wordService;
+		this.rootWordService = rootWordService;
+	}
 
 	@GetMapping
 	public List<Word> findAllWords() {
@@ -39,17 +41,6 @@ public class WordController {
 		return wordService.getWordsByUser(user_id);
 	}
 	
-	@GetMapping("test")
-	public List<String> test() {
-		String DB = System.getenv("DB");
-		String DB_USERNAME = System.getenv("DB_USERNAME");
-		String DB_PASSWORD = System.getenv("DB_PASSWORD");
-		String DB_HOST = System.getenv("DB_HOST");
-		String DEEPL_API_KEY = System.getenv("DEEPL_API_KEY");
-		String OPENAI_API_KEY = System.getenv("OPENAI_API_KEY");
-		return Arrays.asList(DB, DB_USERNAME, DB_PASSWORD, DB_HOST);
-	}
-	
 	@GetMapping("{id}")
 	public ResponseEntity<Word> findById(@PathVariable long id) {
 		Optional<Word> optionalWord = wordService.findById(id);
@@ -57,37 +48,37 @@ public class WordController {
 	                       .orElse(ResponseEntity.notFound().build());
 	}
 
-	@PostMapping("/new/for_user/{user_id}")
-	public ResponseEntity<?> addWord(@RequestBody Word word, @PathVariable long user_id) {
+	@PostMapping("/for_user/{user_id}")
+	public ResponseEntity<?> addWord(@Valid @RequestBody Word word, @PathVariable long user_id) {
 		try {
 			return ResponseEntity.ok(wordService.addWord(word, user_id));
 		}
-		catch (RuntimeException e) {
+		catch (DeepLException | InterruptedException e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Deepl failed. Check that the request body contains 'word', 'contextSentence', and 'translatedTo'. You may also include 'sourceLanguage'.");
 		}
 	}
 
-	@DeleteMapping("/delete/{id}")
-	public Word deleteWord(@PathVariable long id) {
-		return wordService.deleteWord(id);
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Word> deleteWord(@PathVariable long id) {
+		return ResponseEntity.status(204).body(wordService.deleteWord(id));
 	}
 
-	@GetMapping("/root/{id}")
-	public ResponseEntity<?> getRootWord(@PathVariable long id) {
+	@PutMapping("/{id}/root")
+	public ResponseEntity<?> setRootWord(@PathVariable long id) {
 		try {
 			Optional<Word> word = wordService.findById(id);
 			if (word.isEmpty()) {
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The word with ID " + id + " could not be found.");
 			}
-			RootWord result = rootWordService.setRootWord(word.get());
+			RootWord result = rootWordService.determineAndSetRootWord(word.get());
 			return ResponseEntity.ok(result);
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
 
-	@PutMapping("/edit/{id}")
-	public ResponseEntity<?> editWord(@PathVariable long id, @RequestBody Word word) {
+	@PutMapping("/{id}")
+	public ResponseEntity<?> editWord(@PathVariable long id, @Valid @RequestBody Word word) {
 		Word newWord = wordService.editWord(id, word);
 		return ResponseEntity.ok(newWord);
 	}

@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
 @Entity
 @Table(name = "word")
 public class Word {
@@ -11,9 +14,12 @@ public class Word {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long id;
+	@NotBlank(message = "Word cannot be blank")
 	private String word;
+	@Size(max = 5, message = "Use the ISO 639-1 code, e.g. 'NL', 'ES', 'FR'.")
 	private String sourceLanguage;
 	private String translatedTo;
+	@Size(max = 500, message = "Context sentence cannot exceed 500 characters")
 	private String contextSentence;
 	private String translatedContextSentence;
 	private String translation;
