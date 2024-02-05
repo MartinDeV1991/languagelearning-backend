@@ -5,6 +5,7 @@ import java.util.List;
 
 import java.util.Optional;
 
+import com.deepl.api.DeepLException;
 import com.devteam.languagelearning.model.RootWord;
 import com.devteam.languagelearning.service.OpenAiApiService;
 import com.devteam.languagelearning.service.RootWordService;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 
 import com.devteam.languagelearning.model.Word;
 import com.devteam.languagelearning.service.WordService;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("api/word")
@@ -45,23 +48,23 @@ public class WordController {
 	                       .orElse(ResponseEntity.notFound().build());
 	}
 
-	@PostMapping("/new/for_user/{user_id}")
-	public ResponseEntity<?> addWord(@RequestBody Word word, @PathVariable long user_id) {
+	@PostMapping("/for_user/{user_id}")
+	public ResponseEntity<?> addWord(@Valid @RequestBody Word word, @PathVariable long user_id) {
 		try {
 			return ResponseEntity.ok(wordService.addWord(word, user_id));
 		}
-		catch (RuntimeException e) {
+		catch (DeepLException | InterruptedException e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Deepl failed. Check that the request body contains 'word', 'contextSentence', and 'translatedTo'. You may also include 'sourceLanguage'.");
 		}
 	}
 
-	@DeleteMapping("/delete/{id}")
-	public Word deleteWord(@PathVariable long id) {
-		return wordService.deleteWord(id);
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Word> deleteWord(@PathVariable long id) {
+		return ResponseEntity.status(204).body(wordService.deleteWord(id));
 	}
 
-	@GetMapping("/root/{id}")
-	public ResponseEntity<?> getRootWord(@PathVariable long id) {
+	@PutMapping("/{id}/root")
+	public ResponseEntity<?> setRootWord(@PathVariable long id) {
 		try {
 			Optional<Word> word = wordService.findById(id);
 			if (word.isEmpty()) {
@@ -74,8 +77,8 @@ public class WordController {
 		}
 	}
 
-	@PutMapping("/edit/{id}")
-	public ResponseEntity<?> editWord(@PathVariable long id, @RequestBody Word word) {
+	@PutMapping("/{id}")
+	public ResponseEntity<?> editWord(@PathVariable long id, @Valid @RequestBody Word word) {
 		Word newWord = wordService.editWord(id, word);
 		return ResponseEntity.ok(newWord);
 	}
