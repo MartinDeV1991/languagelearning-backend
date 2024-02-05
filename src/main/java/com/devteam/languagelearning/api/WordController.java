@@ -67,7 +67,7 @@ public class WordController {
 			if (word.isEmpty()) {
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The word with ID " + id + " could not be found.");
 			}
-			RootWord result = rootWordService.setRootWord(word.get());
+			RootWord result = rootWordService.determineAndSetRootWord(word.get());
 			return ResponseEntity.ok(result);
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

@@ -67,7 +67,7 @@ public class WordService {
 					word.setSourceLanguage(translatedSentence.getDetectedSourceLanguage());
 				}
 				// set root word (either existing or create new one)
-				rootWordService.setRootWord(word);
+				rootWordService.determineAndSetRootWord(word);
 				
 				Optional<User> optionalUser = userService.findById(user_id);
 				if (optionalUser.isPresent()) {
