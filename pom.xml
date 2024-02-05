@@ -68,7 +68,7 @@
 			<artifactId>service</artifactId>
 			<version>0.18.2</version>
 		</dependency>
-</dependencies>
+	</dependencies>
 	<build>
 		<plugins>
 			<plugin>
