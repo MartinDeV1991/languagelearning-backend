@@ -38,17 +38,6 @@ public class WordController {
 		return wordService.getWordsByUser(user_id);
 	}
 	
-	@GetMapping("test")
-	public List<String> test() {
-		String DB = System.getenv("DB");
-		String DB_USERNAME = System.getenv("DB_USERNAME");
-		String DB_PASSWORD = System.getenv("DB_PASSWORD");
-		String DB_HOST = System.getenv("DB_HOST");
-		String DEEPL_API_KEY = System.getenv("DEEPL_API_KEY");
-		String OPENAI_API_KEY = System.getenv("OPENAI_API_KEY");
-		return Arrays.asList(DB, DB_USERNAME, DB_PASSWORD, DB_HOST);
-	}
-	
 	@GetMapping("{id}")
 	public ResponseEntity<Word> findById(@PathVariable long id) {
 		Optional<Word> optionalWord = wordService.findById(id);
