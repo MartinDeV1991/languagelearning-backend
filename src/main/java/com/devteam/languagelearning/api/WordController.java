@@ -73,9 +73,17 @@ public class WordController {
 	}
 
 	@GetMapping("/root/{id}")
-	public ResponseEntity<RootWord> getRootWord(@PathVariable long id) {
-		RootWord result = rootWordService.setRootWord(wordService.findById(id).get());
-		return ResponseEntity.ok(result);
+	public ResponseEntity<?> getRootWord(@PathVariable long id) {
+		try {
+			Optional<Word> word = wordService.findById(id);
+			if (word.isEmpty()) {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The word with ID " + id + " could not be found.");
+			}
+			RootWord result = rootWordService.setRootWord(word.get());
+			return ResponseEntity.ok(result);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
 	}
 
 }
