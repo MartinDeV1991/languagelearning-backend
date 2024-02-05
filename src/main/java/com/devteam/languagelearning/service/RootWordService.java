@@ -37,9 +37,10 @@ public class RootWordService {
                 rootWord = optional.get();
             }
             word.setRootWord(rootWord);
+            wordRepository.save(word);
             return rootWord;
         }
-        else return word.getRootWord();
+        return word.getRootWord();
     }
 
     public RootWord getRootWord(Word word) {
