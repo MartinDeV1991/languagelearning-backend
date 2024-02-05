@@ -77,6 +77,10 @@ public class WordService {
 			}
 	}
 
+	public Word editWord(long id, Word editedWord) {
+		return wordRepository.save(editedWord);
+	}
+
 	public Word deleteWord(long id) throws NoSuchElementException {
 		Word word = wordRepository.findById(id).orElseThrow();
 		wordRepository.deleteById(id);

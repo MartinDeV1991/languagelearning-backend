@@ -86,4 +86,9 @@ public class WordController {
 		}
 	}
 
+	@PutMapping("/edit/{id}")
+	public ResponseEntity<?> editWord(@PathVariable long id, @RequestBody Word word) {
+		Word newWord = wordService.editWord(id, word);
+		return ResponseEntity.ok(newWord);
+	}
 }
