@@ -20,14 +20,13 @@ import com.devteam.languagelearning.service.WordService;
 @RequestMapping("api/word")
 public class WordController {
 
-	@Autowired
-	private WordService wordService;
-
-	@Autowired
-	private OpenAiApiService openAiApiService;
-
-	@Autowired
-	private RootWordService rootWordService;
+	// Constructor injection instead of field injection (https://medium.com/@detoxicdev/field-injection-v-s-constructor-injection-dd9db2d85b7b)
+	private final WordService wordService;
+	private final RootWordService rootWordService;
+	public WordController(WordService wordService, RootWordService rootWordService) {
+		this.wordService = wordService;
+		this.rootWordService = rootWordService;
+	}
 
 	@GetMapping
 	public List<Word> findAllWords() {
