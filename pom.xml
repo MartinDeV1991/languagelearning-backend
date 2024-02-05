@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.2.2</version>
+		<version>3.2.0</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.devteam</groupId>
@@ -27,6 +27,7 @@
 			<artifactId>spring-boot-starter-data-jdbc</artifactId>
 		</dependency>
 		<dependency>
+			<!--https://docs.spring.io/spring-data/jpa/reference/jpa/query-methods.html-->
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
@@ -58,17 +59,25 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
 		<dependency>
+			<!--https://www.deepl.com/docs-api-->
 			<groupId>com.deepl.api</groupId>
 			<artifactId>deepl-java</artifactId>
 			<version>1.4.0</version>
 		</dependency>
 		<dependency>
+			<!--https://github.com/TheoKanning/openai-java/blob/main/example/src/main/java/example/OpenAiApiExample.java-->
 			<groupId>com.theokanning.openai-gpt3-java</groupId>
 			<artifactId>service</artifactId>
 			<version>0.18.2</version>
 		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>2.0.1.Final</version>
+        </dependency>
+    </dependencies>
 	<build>
 		<plugins>
 			<plugin>
