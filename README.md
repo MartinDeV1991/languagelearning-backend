@@ -10,9 +10,10 @@ An app to store and learn words with the context sentence they were seen in. Des
 |----------------------------|--------|--------------------------------|------------------------------------|
 | `/api/word`                | GET    | -                              | Array of Word objects              |
 | `/api/word/{id}`           | GET    | `id` - ID of the word          | Word object                        |
-| `/api/word/new`            | POST   | JSON representation of Word    | Added Word object                  |
-| `/api/word/delete/{id}`    | DELETE | `id` - ID of the word to delete| Deleted Word object                |
-| `/api/word/root/{id}`      | GET    | `id` - ID of the word          | RootWord object                    |
+| `/api/word`            | POST   | JSON representation of Word    | Added Word object                                              |
+| `/api/word/{id}`    | DELETE | `id` - ID of the word to delete| Deleted Word object                                               |
+| `/api/word/{id}`      | PUT    | JSON representation of Word          | Updated Word object                                       |
+| `/api/word/{id}/root`      | PUT    | `id` - ID of the word          | RootWord object that has been retrieved, added or linked   |
 
 ### RootWord Endpoints
 
