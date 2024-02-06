@@ -33,7 +33,6 @@ public class Word {
 	@JoinColumn(name = "user_id")
 	private User user;
 	
-	@JsonIgnore
 	@OneToOne
 	@JoinColumn(name = "statistics_id")
 	private Statistics statistics;

@@ -1,5 +1,7 @@
 package com.devteam.languagelearning.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -15,6 +17,7 @@ public class Statistics {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long id;
 	
+	@JsonIgnore
 	@OneToOne(mappedBy = "statistics")
 	private Word word;
 	
