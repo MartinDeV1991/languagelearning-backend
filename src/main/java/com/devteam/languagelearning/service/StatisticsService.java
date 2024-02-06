@@ -27,7 +27,20 @@ public class StatisticsService {
 		return this.statisticsRepository.findById(id);
 	}
 
-	public Statistics addStatistics(long word_id) {
+	public Statistics findByWord(long word_id) {
+		Optional<Word> optionalWord = wordService.findById(word_id);
+		if (optionalWord.isPresent()) {
+			Word word = optionalWord.get();
+			Statistics statistics = this.statisticsRepository.findByWord(word);
+			if (statistics == null) {
+				statistics = createStatistics(word_id);
+			}
+			return statistics;
+		}
+		return null;
+	}
+
+	public Statistics createStatistics(long word_id) {
 		Optional<Word> optionalWord = wordService.findById(word_id);
 		if (optionalWord.isPresent()) {
 			Word word = optionalWord.get();
@@ -38,6 +51,14 @@ public class StatisticsService {
 			}
 		}
 		return null;
+	}
+
+	public Statistics addAttempts(Statistics statistics, boolean correct) {
+		statistics.setAttempts(statistics.getAttempts()+1);
+		if (correct) {
+			statistics.setGuessedCorrectly(statistics.getGuessedCorrectly() + 1);
+		}
+		return statisticsRepository.save(statistics);
 	}
 
 	public Statistics changeStatistics(Statistics statistics, Statistics input) {

@@ -28,8 +28,22 @@ public class StatisticsController {
 	}
 	
 	@PostMapping("/{word_id}")
-	public Statistics addStatistics(@PathVariable long word_id) {
-		return statisticsService.addStatistics(word_id);
+	public Statistics createStatistics(@PathVariable long word_id) {
+		return statisticsService.createStatistics(word_id);
+	}
+	
+	@GetMapping("/by_word/{word_id}")
+	public Statistics findStatisticByWord(@PathVariable long word_id) {
+		return statisticsService.findByWord(word_id);
+	}
+	
+	@PutMapping("/add_attempts/{word_id}")
+	public Statistics addAttempts(@PathVariable long word_id, @RequestBody boolean correct) {
+		Statistics statistics = statisticsService.findByWord(word_id);
+		if (statistics != null) {
+			return statisticsService.addAttempts(statistics, correct);
+		}
+		return null;
 	}
 	
 	@PutMapping("/{statistics_id}")
@@ -45,3 +59,4 @@ public class StatisticsController {
 	}
 
 }
+
