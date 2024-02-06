@@ -33,6 +33,12 @@ public class Word {
 	@JoinColumn(name = "user_id")
 	private User user;
 	
+	@JsonIgnore
+	@OneToOne
+	@JoinColumn(name = "statistics_id")
+	private Statistics statistics;
+	
+	
 	public long getId() {
 		return id;
 	}
@@ -88,6 +94,12 @@ public class Word {
 	}
 	public void setUser(User user) {
 		this.user = user;
+	}
+	public Statistics getStatistics() {
+		return statistics;
+	}
+	public void setStatistics(Statistics statistics) {
+		this.statistics = statistics;
 	}
 	
 }
