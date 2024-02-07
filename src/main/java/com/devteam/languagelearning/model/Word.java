@@ -28,7 +28,6 @@ public class Word {
 	@JoinColumn(name="root_word_id")
 	private RootWord rootWord;
 	
-	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	private User user;
@@ -36,7 +35,6 @@ public class Word {
 	@OneToOne
 	@JoinColumn(name = "statistics_id")
 	private Statistics statistics;
-	
 	
 	public long getId() {
 		return id;
