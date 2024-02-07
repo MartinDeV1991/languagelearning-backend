@@ -9,6 +9,8 @@ import com.deepl.api.TextResult;
 import com.deepl.api.Translator;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.devteam.languagelearning.model.User;
@@ -80,8 +82,21 @@ public class WordService {
 		return this.wordRepository.save(word);
 	}
 
-	public Word editWord(long id, Word editedWord) {
-		return wordRepository.save(editedWord);
+	public Word editWord(long id, Word newWord) {
+		Optional<Word> optionalWord = this.findById(id);
+		if (optionalWord.isPresent()) {
+			Word word = optionalWord.get();
+	        word.setWord(newWord.getWord());
+	        word.setSourceLanguage(newWord.getSourceLanguage());
+	        word.setTranslatedTo(newWord.getTranslatedTo());
+	        word.setContextSentence(newWord.getContextSentence());
+	        word.setTranslatedContextSentence(newWord.getTranslatedContextSentence());
+	        word.setTranslation(newWord.getTranslation());
+	        word.setRootWord(newWord.getRootWord());
+	        return wordRepository.save(word);
+		} else {
+			return null;
+		}
 	}
 
 	public Word deleteWord(long id) throws NoSuchElementException {

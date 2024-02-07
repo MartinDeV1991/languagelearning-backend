@@ -3,6 +3,8 @@ package com.devteam.languagelearning.model;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -24,6 +26,7 @@ public class User {
 	private String password;
 	private LocalDate creationDate;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy="user", cascade = CascadeType.ALL)
 	private List<Word> words;
 

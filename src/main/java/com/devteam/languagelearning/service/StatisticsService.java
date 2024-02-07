@@ -60,6 +60,17 @@ public class StatisticsService {
 		}
 		return statisticsRepository.save(statistics);
 	}
+	
+	public Statistics setFlag(Statistics statistics, boolean flag) {
+		statistics.setAttempts(statistics.getAttempts()+1);
+		if (flag) {
+			statistics.setFlag(true);
+		} else {
+			statistics.setFlag(false);
+		}
+		return statisticsRepository.save(statistics);
+	}
+	
 
 	public Statistics changeStatistics(Statistics statistics, Statistics input) {
 		statistics.setAttempts(input.getAttempts());
