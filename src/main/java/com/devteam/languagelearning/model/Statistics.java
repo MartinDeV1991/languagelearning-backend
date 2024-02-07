@@ -2,7 +2,6 @@ package com.devteam.languagelearning.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,6 +22,8 @@ public class Statistics {
 	
 	private long attempts;
 	private long guessedCorrectly;
+	private boolean flag;
+	
 	
 	public long getId() {
 		return id;
@@ -48,6 +49,11 @@ public class Statistics {
 	public void setGuessedCorrectly(long guessedCorrectly) {
 		this.guessedCorrectly = guessedCorrectly;
 	}
-	
-	
+	public boolean isFlag() {
+		return flag;
+	}
+	public void setFlag(boolean flag) {
+		this.flag = flag;
+	}
+		
 }

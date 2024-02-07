@@ -13,10 +13,11 @@ public class OpenAiConfig {
 //    private static final String openAiKey = "test";
     
     public static String getOpenAiKey() {
-    	System.out.println("key1234: " + openAiKey);
+    	System.out.println("open: " + openAiKey);
         if (openAiKey == null || openAiKey.isEmpty()) {
     		openAiKey = "key";
     	}
+        System.out.println("open: " + openAiKey);
         return openAiKey;
     }
 }

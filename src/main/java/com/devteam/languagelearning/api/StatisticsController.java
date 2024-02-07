@@ -46,6 +46,15 @@ public class StatisticsController {
 		return null;
 	}
 	
+	@PutMapping("/flag/{word_id}")
+	public Statistics setFlag(@PathVariable long word_id, @RequestBody boolean flag) {
+		Statistics statistics = statisticsService.findByWord(word_id);
+		if (statistics != null) {
+			return statisticsService.setFlag(statistics, flag);
+		}
+		return null;
+	}
+	
 	@PutMapping("/{statistics_id}")
 	public Statistics changeStatistics(@PathVariable long statistics_id, @RequestBody Statistics input) {
 		Optional<Statistics> optionalStatistics = statisticsService.findById(statistics_id);
