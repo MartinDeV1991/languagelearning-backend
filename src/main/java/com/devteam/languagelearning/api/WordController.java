@@ -59,8 +59,25 @@ public class WordController {
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Word> deleteWord(@PathVariable long id) {
-		return ResponseEntity.status(204).body(wordService.deleteWord(id));
+	public ResponseEntity<?> deleteWord(@PathVariable long id) {
+		try {
+			return ResponseEntity.status(200).body(wordService.deleteWord(id));
+		}
+		catch (NoSuchElementException e) {
+			return ResponseEntity.status(404).body("No element exists with that ID.");
+		}
+	}
+
+	@DeleteMapping("")
+	public ResponseEntity<?> deleteWords(@RequestBody ArrayList<Long> ids) {
+		ArrayList<Word> deletedWords = wordService.deleteWords(ids);
+		if (deletedWords.size() == ids.size()) {
+			return ResponseEntity.status(200).body(deletedWords);
+		} else if (deletedWords.isEmpty()) {
+			return ResponseEntity.status(404).body("Failed to delete any words.");
+		} else {
+			return ResponseEntity.status(207).body(deletedWords);
+		}
 	}
 
 	@PutMapping("/{id}/root")
