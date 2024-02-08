@@ -26,7 +26,7 @@ public class StatisticsController {
 	public List<Statistics> findAllStatistics() {
 		return statisticsService.getAllStatistics();
 	}
-	
+		
 	@PostMapping("/{word_id}")
 	public Statistics createStatistics(@PathVariable long word_id) {
 		return statisticsService.createStatistics(word_id);
