@@ -1,14 +1,12 @@
 package com.devteam.languagelearning.api;
 
-import java.util.Arrays;
-import java.util.List;
-
-import java.util.Optional;
+import java.util.*;
 
 import com.deepl.api.DeepLException;
 import com.devteam.languagelearning.model.RootWord;
 import com.devteam.languagelearning.service.OpenAiApiService;
 import com.devteam.languagelearning.service.RootWordService;
+import com.devteam.languagelearning.service.StatisticsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,9 +24,11 @@ public class WordController {
 	// Constructor injection instead of field injection (https://medium.com/@detoxicdev/field-injection-v-s-constructor-injection-dd9db2d85b7b)
 	private final WordService wordService;
 	private final RootWordService rootWordService;
-	public WordController(WordService wordService, RootWordService rootWordService) {
+	private final StatisticsService statisticsService;
+	public WordController(WordService wordService, RootWordService rootWordService, StatisticsService statisticsService) {
 		this.wordService = wordService;
 		this.rootWordService = rootWordService;
+		this.statisticsService = statisticsService;
 	}
 
 	@GetMapping
@@ -48,10 +48,12 @@ public class WordController {
 	                       .orElse(ResponseEntity.notFound().build());
 	}
 
-	@PostMapping("/for_user/{user_id}")
+	@PostMapping("/user/{user_id}")
 	public ResponseEntity<?> addWord(@Valid @RequestBody Word word, @PathVariable long user_id) {
 		try {
-			return ResponseEntity.ok(wordService.addWord(word, user_id));
+			Word newWord = wordService.addWord(word, user_id);
+			statisticsService.createStatistics(newWord.getId());
+			return ResponseEntity.ok(newWord);
 		}
 		catch (DeepLException | InterruptedException e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Deepl failed. Check that the request body contains 'word', 'contextSentence', and 'translatedTo'. You may also include 'sourceLanguage'.");
@@ -59,8 +61,25 @@ public class WordController {
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Word> deleteWord(@PathVariable long id) {
-		return ResponseEntity.status(204).body(wordService.deleteWord(id));
+	public ResponseEntity<?> deleteWord(@PathVariable long id) {
+		try {
+			return ResponseEntity.status(200).body(wordService.deleteWord(id));
+		}
+		catch (NoSuchElementException e) {
+			return ResponseEntity.status(404).body("No element exists with that ID.");
+		}
+	}
+
+	@DeleteMapping("")
+	public ResponseEntity<?> deleteWords(@RequestBody ArrayList<Long> ids) {
+		ArrayList<Word> deletedWords = wordService.deleteWords(ids);
+		if (deletedWords.size() == ids.size()) {
+			return ResponseEntity.status(200).body(deletedWords);
+		} else if (deletedWords.isEmpty()) {
+			return ResponseEntity.status(404).body("Failed to delete any words.");
+		} else {
+			return ResponseEntity.status(207).body(deletedWords);
+		}
 	}
 
 	@PutMapping("/{id}/root")
