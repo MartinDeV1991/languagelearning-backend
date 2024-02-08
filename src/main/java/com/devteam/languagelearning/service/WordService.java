@@ -1,5 +1,6 @@
 package com.devteam.languagelearning.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -8,6 +9,7 @@ import com.deepl.api.DeepLException;
 import com.deepl.api.TextResult;
 import com.deepl.api.Translator;
 
+import com.devteam.languagelearning.model.Statistics;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -103,5 +105,20 @@ public class WordService {
 		Word word = wordRepository.findById(id).orElseThrow();
 		wordRepository.deleteById(id);
 		return word;
+	}
+
+	public ArrayList<Word> deleteWords(ArrayList<Long> ids) {
+		ArrayList<Word> deletedWords = new ArrayList<>();
+		for (Long id : ids) {
+			try {
+				Word word = wordRepository.findById(id).orElseThrow();
+				wordRepository.deleteById(id);
+				deletedWords.add(word);
+				System.out.println("Word with id " + id + " deleted.");
+			} catch (NoSuchElementException e) {
+				System.out.println("Word with id " + id + " not found.");
+			}
+		}
+		return deletedWords;
 	}
 }
