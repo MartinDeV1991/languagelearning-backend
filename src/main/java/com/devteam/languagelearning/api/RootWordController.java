@@ -23,7 +23,7 @@ public class RootWordController {
         return rootWordRepository.findAll();
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public void deleteRootWord(@PathVariable long id) {
         wordRepository.findByRootWordId(id).forEach((word) -> word.setRootWord(null));
         rootWordRepository.delete(rootWordRepository.findById(id).get());
