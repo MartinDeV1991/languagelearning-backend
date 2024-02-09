@@ -35,6 +35,10 @@ public class Word {
 	@OneToOne
 	@JoinColumn(name = "statistics_id")
 	private Statistics statistics;
+
+	@ManyToOne
+	@JoinColumn(name = "book_id")
+	private Book book;
 	
 	public long getId() {
 		return id;
