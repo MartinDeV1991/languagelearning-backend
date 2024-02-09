@@ -102,5 +102,12 @@ public class Word {
 	public void setStatistics(Statistics statistics) {
 		this.statistics = statistics;
 	}
-	
+
+	public Book getBook() {
+		return book;
+	}
+
+	public void setBook(Book book) {
+		this.book = book;
+	}
 }
