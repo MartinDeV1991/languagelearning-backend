@@ -14,6 +14,7 @@ public class Book {
     private String title;
     private String author;
     private String language;
+    private String isbn;
     @OneToMany(mappedBy="word", cascade = CascadeType.ALL)
     private List<Word> words;
 
@@ -55,6 +56,14 @@ public class Book {
 
     public void setLanguage(String language) {
         this.language = language;
+    }
+
+    public String getIsbn() {
+        return isbn;
+    }
+
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
     }
 
     public List<Word> getWords() {
