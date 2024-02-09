@@ -2,12 +2,13 @@ package com.devteam.languagelearning.api;
 
 import com.devteam.languagelearning.model.Book;
 import com.devteam.languagelearning.service.BookService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.service.annotation.PutExchange;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("api/books")
@@ -20,39 +21,67 @@ public class BookController {
     }
 
     @GetMapping
-    public List<Book> findAllBooks() {return bookService.getAllBooks();}
+    public ResponseEntity<List<Book>> findAllBooks() {
+        return ResponseEntity.status(HttpStatus.OK).body(bookService.getAllBooks()) ;
+    }
 
     @GetMapping("{id}")
-    public Book findBookById(@PathVariable long id) {
-        return bookService.getBookById(id);
+    public ResponseEntity<?> findBookById(@PathVariable long id) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(bookService.getBookById(id)) ;
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The book with id '" + id +  "' was not found.");
+        }
+
     }
 
     @PostMapping
-    public Book addBook(@RequestBody Book book) {
-        return bookService.addBook(book);
+    public ResponseEntity<?> addBook(@RequestBody Book book) {
+        try {
+            return ResponseEntity.status(HttpStatus.CREATED).body(bookService.addBook(book));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Exception: " + e);
+        }
+
     }
 
     @PostMapping("multiple")
-    public List<Book> addBooks(@RequestBody List<Book> books) {
+    public ResponseEntity<List<Book>> addBooks(@RequestBody List<Book> books) {
         List<Book> savedBooks = new ArrayList<>();
+        List<Book> failedBooks = new ArrayList<>();
+
         for (Book book : books) {
-            savedBooks.add(bookService.addBook(book));
+            try {
+                savedBooks.add(bookService.addBook(book));
+            } catch (Exception e) {
+                failedBooks.add(book);
+            }
         }
-        return savedBooks;
+        if (savedBooks.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(savedBooks);
+        } else if (failedBooks.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedBooks);
+        } else {
+            return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT).body(savedBooks);
+        }
+
     }
 
     @PutMapping("{id}")
     public ResponseEntity<?> editBook(@PathVariable long id, @RequestBody Book book) {
         try {
-            return ResponseEntity.status(200).body(bookService.editBook(id, book));
+            return ResponseEntity.status(HttpStatus.OK).body(bookService.editBook(id, book));
         } catch (Exception e) {
-            return ResponseEntity.status(404).body("Exception: " + e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Exception: " + e);
         }
-
     }
 
     @DeleteMapping("{id}")
-    public Book deleteBook(@PathVariable long id) {
-        return bookService.deleteBook(id);
+    public ResponseEntity<?> deleteBook(@PathVariable long id) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(bookService.deleteBook(id)) ;
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The book with id '" + id +  "' was not found.");
+        }
     }
 }
