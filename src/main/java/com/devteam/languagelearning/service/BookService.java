@@ -30,6 +30,10 @@ public class BookService {
         return bookRepository.findById(id).orElseThrow();
     }
 
+    public List<Book> getBooksByUser(long userId) {
+        return wordRepository.findBooksByUserId(userId);
+    }
+
     public Book editBook(long id, Book newBook) {
         Book book = this.getBookById(id);
         book.setTitle(newBook.getTitle());
@@ -49,5 +53,16 @@ public class BookService {
             wordRepository.save(word);
         }
         return book;
+    }
+
+    public Book getOrCreateBook(Book book) {
+        Optional<Book> bookOptional = bookRepository.findByIsbn(book.getIsbn());
+        if (bookOptional.isEmpty()) {
+            bookOptional = bookRepository.findByTitleAndAuthor(book.getTitle(), book.getAuthor());
+            if (bookOptional.isEmpty()) {
+                return bookRepository.save(book);
+            }
+        }
+        return bookOptional.get();
     }
 }

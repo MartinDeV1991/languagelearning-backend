@@ -1,5 +1,6 @@
 package com.devteam.languagelearning.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -15,7 +16,8 @@ public class Book {
     private String author;
     private String language;
     private String isbn;
-    @OneToMany(mappedBy="word", cascade = CascadeType.ALL)
+    @JsonIgnore
+    @OneToMany(mappedBy="book")
     private List<Word> words;
 
     public Book() {

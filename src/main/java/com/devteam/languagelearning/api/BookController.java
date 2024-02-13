@@ -35,6 +35,15 @@ public class BookController {
 
     }
 
+    @GetMapping("user/{user_id}")
+    public ResponseEntity<?> findBookByUser(@PathVariable long user_id) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(bookService.getBooksByUser(user_id)) ;
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The user with id '" + user_id +  "' was not found.");
+        }
+    }
+
     @PostMapping
     public ResponseEntity<?> addBook(@RequestBody Book book) {
         try {

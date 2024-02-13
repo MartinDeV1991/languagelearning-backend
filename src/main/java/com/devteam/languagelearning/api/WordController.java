@@ -98,7 +98,13 @@ public class WordController {
 
 	@PutMapping("/{id}")
 	public ResponseEntity<?> editWord(@PathVariable long id, @Valid @RequestBody Word word) {
-		Word newWord = wordService.editWord(id, word);
-		return ResponseEntity.ok(newWord);
+		try {
+			Word newWord = wordService.editWord(id, word);
+			return ResponseEntity.ok(newWord);
+		} catch (NoSuchElementException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The word with ID " + id + " could not be found.");
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Exception: " + e);
+		}
 	}
 }

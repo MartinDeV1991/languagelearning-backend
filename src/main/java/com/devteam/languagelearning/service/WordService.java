@@ -9,6 +9,7 @@ import com.deepl.api.DeepLException;
 import com.deepl.api.TextResult;
 import com.deepl.api.Translator;
 
+import com.devteam.languagelearning.model.Book;
 import com.devteam.languagelearning.model.Statistics;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,6 +31,9 @@ public class WordService {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private BookService bookService;
 
 	private final Translator translator;
 
@@ -73,6 +77,8 @@ public class WordService {
 		}
 		// set root word (either existing or create new one)
 		rootWordService.determineAndSetRootWord(word);
+		// Set book
+		word.setBook(bookService.getOrCreateBook(word.getBook()));
 
 		Optional<User> optionalUser = userService.findById(user_id);
 		if (optionalUser.isPresent()) {
@@ -95,9 +101,10 @@ public class WordService {
 	        word.setTranslatedContextSentence(newWord.getTranslatedContextSentence());
 	        word.setTranslation(newWord.getTranslation());
 	        word.setRootWord(newWord.getRootWord());
+		    word.setBook(bookService.getOrCreateBook(newWord.getBook()));
 	        return wordRepository.save(word);
 		} else {
-			return null;
+			throw new NoSuchElementException();
 		}
 	}
 
