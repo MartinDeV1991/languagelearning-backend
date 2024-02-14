@@ -86,9 +86,11 @@ public class WordService {
 		rootWordService.determineAndSetRootWord(newWord);
 
 		// Set book
-		Book book = bookService.getOrCreateBook(word.getBook());
-		newWord.setBook(book);
-		book.getWords().add(newWord);
+		if (word.getBook() != null) {
+			Book book = bookService.getOrCreateBook(word.getBook());
+			newWord.setBook(book);
+			book.getWords().add(newWord);
+		}
 
 		// save and return new word object
 		return newWord;
