@@ -39,7 +39,17 @@ public class Word {
 	@ManyToOne
 	@JoinColumn(name = "book_id")
 	private Book book;
-	
+
+    public Word(String word, String contextSentence, String sourceLanguage, String translatedTo) {
+		this.word = word;
+		this.contextSentence = contextSentence;
+		this.sourceLanguage = sourceLanguage;
+		this.translatedTo = translatedTo;
+    }
+
+	public Word() {
+	}
+
 	public long getId() {
 		return id;
 	}

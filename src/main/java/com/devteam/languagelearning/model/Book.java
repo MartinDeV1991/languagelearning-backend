@@ -3,6 +3,7 @@ package com.devteam.languagelearning.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -16,9 +17,10 @@ public class Book {
     private String author;
     private String language;
     private String isbn;
+
     @JsonIgnore
-    @OneToMany(mappedBy="book")
-    private List<Word> words;
+    @OneToMany(mappedBy="book", cascade = CascadeType.ALL)
+    private List<Word> words = new ArrayList<>();
 
     public Book() {
     }

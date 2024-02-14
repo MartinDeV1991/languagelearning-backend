@@ -58,7 +58,7 @@ public class BookService {
     public Book getOrCreateBook(Book book) {
         Optional<Book> bookOptional = bookRepository.findByIsbn(book.getIsbn());
         if (bookOptional.isEmpty()) {
-            bookOptional = bookRepository.findByTitleAndAuthor(book.getTitle(), book.getAuthor());
+            bookOptional = bookRepository.findByTitleAndAuthorAndLanguage(book.getTitle(), book.getAuthor(), book.getLanguage());
             if (bookOptional.isEmpty()) {
                 return bookRepository.save(book);
             }
