@@ -1,10 +1,12 @@
 package com.devteam.languagelearning.api;
 
 import com.devteam.languagelearning.model.RootWord;
+import com.devteam.languagelearning.model.Word;
 import com.devteam.languagelearning.persistence.RootWordRepository;
 import com.devteam.languagelearning.persistence.WordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.service.annotation.GetExchange;
 
 import java.util.List;
 
@@ -21,6 +23,11 @@ public class RootWordController {
     @GetMapping
     public List<RootWord> getRootWords() {
         return rootWordRepository.findAll();
+    }
+
+    @GetMapping("{id}/words")
+    public List<Word> getWordsOfRootWord(@PathVariable long id) {
+        return wordRepository.findByRootWordId(id);
     }
 
     @DeleteMapping("/{id}")

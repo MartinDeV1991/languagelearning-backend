@@ -56,13 +56,19 @@ public class BookService {
     }
 
     public Book getOrCreateBook(Book book) {
-        Optional<Book> bookOptional = bookRepository.findByIsbn(book.getIsbn());
-        if (bookOptional.isEmpty()) {
-            bookOptional = bookRepository.findByTitleAndAuthorAndLanguage(book.getTitle(), book.getAuthor(), book.getLanguage());
+        Optional<Book> bookOptional;
+        if (book.getIsbn() != null) {
+            bookOptional = bookRepository.findByIsbn(book.getIsbn());
             if (bookOptional.isEmpty()) {
-                return bookRepository.save(book);
+                bookOptional = bookRepository.findByTitleAndAuthorAndLanguage(book.getTitle(), book.getAuthor(), book.getLanguage());
+                if (bookOptional.isEmpty()) {
+                    return bookRepository.save(book);
+                }
             }
+            return bookOptional.get();
+        } else {
+            bookOptional = bookRepository.findByTitleAndAuthorAndLanguage(book.getTitle(), book.getAuthor(), book.getLanguage());
+            return bookOptional.orElseGet(() -> bookRepository.save(book));
         }
-        return bookOptional.get();
     }
 }

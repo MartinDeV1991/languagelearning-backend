@@ -3,11 +3,10 @@ package com.devteam.languagelearning.api;
 import java.util.*;
 
 import com.deepl.api.DeepLException;
+import com.devteam.languagelearning.model.Book;
 import com.devteam.languagelearning.model.RootWord;
-import com.devteam.languagelearning.service.OpenAiApiService;
 import com.devteam.languagelearning.service.RootWordService;
 import com.devteam.languagelearning.service.StatisticsService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -60,6 +59,30 @@ public class WordController {
 		}
 	}
 
+	@PostMapping("/user/{user_id}/multiple")
+	public ResponseEntity<?> addWords(@RequestBody List<Word> words, @PathVariable long user_id) {
+		List<Word> savedWords = new ArrayList<>();
+		List<Word> failedWords = new ArrayList<>();
+
+		for (Word word : words) {
+			try {
+				Word newWord= wordService.addWord(word, user_id);
+				statisticsService.createStatistics(newWord.getId());
+				savedWords.add(newWord);
+			} catch (Exception e) {
+				failedWords.add(word);
+			}
+		}
+		if (savedWords.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(savedWords);
+		} else if (failedWords.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.CREATED).body(savedWords);
+		} else {
+			return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT).body(savedWords);
+		}
+
+	}
+
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> deleteWord(@PathVariable long id) {
 		try {
@@ -92,7 +115,7 @@ public class WordController {
 			RootWord result = rootWordService.determineAndSetRootWord(word.get());
 			return ResponseEntity.ok(result);
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e);
 		}
 	}
 
