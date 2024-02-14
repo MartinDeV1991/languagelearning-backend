@@ -9,7 +9,9 @@ import com.deepl.api.DeepLException;
 import com.deepl.api.TextResult;
 import com.deepl.api.Translator;
 
+import com.devteam.languagelearning.model.Book;
 import com.devteam.languagelearning.model.Statistics;
+import com.devteam.languagelearning.persistence.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,21 +24,19 @@ import com.devteam.languagelearning.persistence.WordRepository;
 @Service
 public class WordService {
 
-	@Autowired
-	private WordRepository wordRepository;
-
-	@Autowired
-	private RootWordService rootWordService;
-
-	@Autowired
-	private UserService userService;
-
+	private final WordRepository wordRepository;
+	private final RootWordService rootWordService;
+	private final UserService userService;
+	private final BookService bookService;
 	private final Translator translator;
 
 	@Autowired
-	public WordService(Translator translator, RootWordService rootWordService) {
+	public WordService(Translator translator, RootWordService rootWordService, UserService userService, BookService bookService, WordRepository wordRepository) {
 		this.translator = translator;
 		this.rootWordService = rootWordService;
+		this.userService = userService;
+		this.bookService = bookService;
+		this.wordRepository = wordRepository;
 	}
 
 	public List<Word> getAllWords() {
@@ -59,29 +59,41 @@ public class WordService {
 	}
 
 	public Word addWord(Word word, long user_id) throws DeepLException, InterruptedException {
+		Word newWord = new Word(word.getWord(), word.getContextSentence(), word.getSourceLanguage(), word.getTranslatedTo());
 		// translate both word and sentence with deepl, save to the word object
 		TextResult translatedWord = translator.translateText(word.getWord(), word.getSourceLanguage(),
 				word.getTranslatedTo());
 		TextResult translatedSentence = translator.translateText(word.getContextSentence(), word.getSourceLanguage(),
 				word.getTranslatedTo());
-		word.setTranslation(translatedWord.getText());
-		word.setTranslatedContextSentence(translatedSentence.getText());
+		newWord.setTranslation(translatedWord.getText());
+		newWord.setTranslatedContextSentence(translatedSentence.getText());
 
 		// set source language from API response if not already provided
 		if (word.getSourceLanguage() == null) {
 			word.setSourceLanguage(translatedSentence.getDetectedSourceLanguage());
+		} else {
+			newWord.setSourceLanguage(word.getSourceLanguage());
 		}
-		// set root word (either existing or create new one)
-		rootWordService.determineAndSetRootWord(word);
 
+		// Set user
 		Optional<User> optionalUser = userService.findById(user_id);
 		if (optionalUser.isPresent()) {
 			User user = optionalUser.get();
-			word.setUser(user);
+			newWord.setUser(user);
+		}
+
+		// set root word (either existing or create new one)
+		rootWordService.determineAndSetRootWord(newWord);
+
+		// Set book
+		if (word.getBook() != null) {
+			Book book = bookService.getOrCreateBook(word.getBook());
+			newWord.setBook(book);
+			book.getWords().add(newWord);
 		}
 
 		// save and return new word object
-		return this.wordRepository.save(word);
+		return newWord;
 	}
 
 	public Word editWord(long id, Word newWord) {
@@ -95,9 +107,10 @@ public class WordService {
 	        word.setTranslatedContextSentence(newWord.getTranslatedContextSentence());
 	        word.setTranslation(newWord.getTranslation());
 	        word.setRootWord(newWord.getRootWord());
+		    word.setBook(bookService.getOrCreateBook(newWord.getBook()));
 	        return wordRepository.save(word);
 		} else {
-			return null;
+			throw new NoSuchElementException();
 		}
 	}
 
