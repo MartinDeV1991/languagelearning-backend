@@ -2,6 +2,7 @@ package com.devteam.languagelearning.api;
 
 import java.util.List;
 
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +26,16 @@ public class UserController {
 	@GetMapping
 	public List<User> findAllUsers() {
 		return userService.getAllUsers();
+	}
+	
+	@GetMapping("/{user_id}")
+	public User findUserById(@PathVariable long user_id) {
+		Optional<User> optionalUser = userService.findById(user_id);
+		if (optionalUser.isPresent()) {
+			User user = optionalUser.get();
+			return user;
+		}
+		return null;
 	}
 	
 	@PostMapping("login")
