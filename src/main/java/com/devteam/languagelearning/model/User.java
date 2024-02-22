@@ -30,6 +30,9 @@ public class User {
 	@OneToMany(mappedBy="user", cascade = CascadeType.ALL)
 	private List<Word> words;
 
+	@OneToMany(mappedBy="user", cascade = CascadeType.ALL)
+	private List<Log> log;
+	
 	public long getId() {
 		return id;
 	}
@@ -84,6 +87,14 @@ public class User {
 
 	public void setWords(List<Word> words) {
 		this.words = words;
+	}
+
+	public List<Log> getLog() {
+		return log;
+	}
+
+	public void setLog(List<Log> log) {
+		this.log = log;
 	}
 	
 }
