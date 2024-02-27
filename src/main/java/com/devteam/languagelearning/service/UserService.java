@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +40,8 @@ public class UserService {
 		if (optionalUser.isPresent()) {
 			User user = optionalUser.get();
 			if (loginInfo.getPassword().equals(user.getPassword())) {
+				user.setToken(RandomStringUtils.random(100, true, true));
+				userRepository.save(user);
 				return user;
 			}
 		}
