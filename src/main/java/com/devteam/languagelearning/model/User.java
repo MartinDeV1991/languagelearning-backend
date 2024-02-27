@@ -6,6 +6,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,6 +26,9 @@ public class User {
 	private String email;
 	private String password;
 	private LocalDate creationDate;
+	
+	@Column(length = 100, nullable = true)
+	private String token;
 	
 	@JsonIgnore
 	@OneToMany(mappedBy="user", cascade = CascadeType.ALL)
@@ -97,4 +101,11 @@ public class User {
 		this.log = log;
 	}
 	
+	public String getToken() {
+		return token;
+	}
+	
+	public void setToken(String token) {
+		this.token = token;
+	}
 }
