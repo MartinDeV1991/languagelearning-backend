@@ -27,7 +27,7 @@ public class User {
 	private String password;
 	private LocalDate creationDate;
 	
-	@Column(length = 100, nullable = true)
+	@Column(nullable = true)
 	private String token;
 	
 	@JsonIgnore

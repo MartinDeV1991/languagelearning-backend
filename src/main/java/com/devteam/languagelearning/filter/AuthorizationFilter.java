@@ -3,6 +3,8 @@ package com.devteam.languagelearning.filter;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Optional;
+
+import com.devteam.languagelearning.model.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -26,6 +28,9 @@ public class AuthorizationFilter extends OncePerRequestFilter {
 	@Autowired
 	private UserService userService;
 
+	@Autowired
+	private JwtTokenProvider jwtTokenProvider;
+
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
@@ -33,16 +38,20 @@ public class AuthorizationFilter extends OncePerRequestFilter {
 		String authorizeHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 		System.out.println("token: " + authorizeHeader);
 		if (authorizeHeader != null) {
+			System.out.println("inside if");
 			String parameter = request.getHeader("userId");
+			System.out.println("Parameter: "+ parameter);
 			try {
 				long userId = Long.parseLong(parameter);
-				if (validateToken(authorizeHeader, userId)) {
+				System.out.println("User id: " + userId);
+				if (jwtTokenProvider.validateToken(authorizeHeader, userId)) {
 					System.out.println("Je krijgt permissie voor de request");
 					setAuthentication(userId);
 					filterChain.doFilter(request, response);
 					return;
 				}
 			} catch (NumberFormatException e) {
+				System.out.println("Number format exception");
 			}
 		}
 		filterChain.doFilter(request, response);
