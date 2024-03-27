@@ -20,11 +20,14 @@ import javax.validation.Valid;
 @RequestMapping("api/word")
 public class WordController {
 
-	// Constructor injection instead of field injection (https://medium.com/@detoxicdev/field-injection-v-s-constructor-injection-dd9db2d85b7b)
+	// Constructor injection instead of field injection
+	// (https://medium.com/@detoxicdev/field-injection-v-s-constructor-injection-dd9db2d85b7b)
 	private final WordService wordService;
 	private final RootWordService rootWordService;
 	private final StatisticsService statisticsService;
-	public WordController(WordService wordService, RootWordService rootWordService, StatisticsService statisticsService) {
+
+	public WordController(WordService wordService, RootWordService rootWordService,
+			StatisticsService statisticsService) {
 		this.wordService = wordService;
 		this.rootWordService = rootWordService;
 		this.statisticsService = statisticsService;
@@ -34,17 +37,23 @@ public class WordController {
 	public List<Word> findAllWords() {
 		return wordService.getAllWords();
 	}
-	
+
+	@GetMapping("env")
+	public String environmentalVar() {
+		String variable = System.getenv("DEEPL_API_KEY");
+		System.out.println("lol");
+		return variable;
+	}
+
 	@GetMapping("user/{user_id}")
 	public List<Word> findWordsByUser(@PathVariable long user_id) {
 		return wordService.getWordsByUser(user_id);
 	}
-	
+
 	@GetMapping("{id}")
 	public ResponseEntity<Word> findById(@PathVariable long id) {
 		Optional<Word> optionalWord = wordService.findById(id);
-	    return optionalWord.map(word -> ResponseEntity.ok(word))
-	                       .orElse(ResponseEntity.notFound().build());
+		return optionalWord.map(word -> ResponseEntity.ok(word)).orElse(ResponseEntity.notFound().build());
 	}
 
 	@PostMapping("/user/{user_id}")
@@ -53,9 +62,9 @@ public class WordController {
 			Word newWord = wordService.addWord(word, user_id);
 			statisticsService.createStatistics(newWord.getId());
 			return ResponseEntity.ok(newWord);
-		}
-		catch (DeepLException | InterruptedException e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Deepl failed. Check that the request body contains 'word', 'contextSentence', and 'translatedTo'. You may also include 'sourceLanguage'.");
+		} catch (DeepLException | InterruptedException e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+					"Deepl failed. Check that the request body contains 'word', 'contextSentence', and 'translatedTo'. You may also include 'sourceLanguage'.");
 		}
 	}
 
@@ -66,7 +75,7 @@ public class WordController {
 
 		for (Word word : words) {
 			try {
-				Word newWord= wordService.addWord(word, user_id);
+				Word newWord = wordService.addWord(word, user_id);
 				statisticsService.createStatistics(newWord.getId());
 				savedWords.add(newWord);
 			} catch (Exception e) {
@@ -87,8 +96,7 @@ public class WordController {
 	public ResponseEntity<?> deleteWord(@PathVariable long id) {
 		try {
 			return ResponseEntity.status(200).body(wordService.deleteWord(id));
-		}
-		catch (NoSuchElementException e) {
+		} catch (NoSuchElementException e) {
 			return ResponseEntity.status(404).body("No element exists with that ID.");
 		}
 	}
@@ -110,7 +118,8 @@ public class WordController {
 		try {
 			Optional<Word> word = wordService.findById(id);
 			if (word.isEmpty()) {
-				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The word with ID " + id + " could not be found.");
+				return ResponseEntity.status(HttpStatus.NOT_FOUND)
+						.body("The word with ID " + id + " could not be found.");
 			}
 			RootWord result = rootWordService.determineAndSetRootWord(word.get());
 			return ResponseEntity.ok(result);
