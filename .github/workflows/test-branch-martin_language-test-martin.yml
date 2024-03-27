@@ -44,19 +44,13 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: java-app
-      
-      - name: Login to Azure
-        uses: azure/login@v1
-        with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_A21AFF5BE07546D3A7A3A37DB4FB899F }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_3B9C8AAB287C434E8EADF29856EA5375 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_84B8FFC6C09340618E8551BA76F9B349 }}
-
+          
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
           app-name: 'language-test-martin'
           slot-name: 'Production'
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_3C58C2B4FE654C10B17C4E4D24EFC283 }}
           package: '*.jar'
           
