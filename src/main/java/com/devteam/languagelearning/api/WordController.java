@@ -40,7 +40,7 @@ public class WordController {
 
 	@GetMapping("env")
 	public String environmentalVar() {
-		String variable = System.getenv("DEEPL_API_KEY");
+		String variable = "key: " + System.getenv("DEEPL_API_KEY");
 		System.out.println("lol");
 		return variable;
 	}
